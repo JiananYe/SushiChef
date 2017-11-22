@@ -15,9 +15,9 @@
 //std::string result_window = "Result window"; //test
 int screenX = 0, screenY = 0, screenW = 640, screenH = 480;
 int mouseX = 0, mouseY = 0;
-int cRollRequest = 0, makeRequest = 0, onigiriRequest = 0, sRollRequest = 0, shrimpRequest = 0;
+int cRollRequest = 0, makeRequest = 0, onigiriRequest = 0, sRollRequest = 0, shrimpRequest = 0, unagiRequest = 0, dragonRequest = 0, comboRequest = 0;
 int orderCount = 0;
-int riceCount = 10, roeCount = 10, noriCount = 10, salmonCount = 5, shrimpCount = 5;
+int riceCount = 10, roeCount = 10, noriCount = 10, salmonCount = 5, shrimpCount = 5, unagiCount = 5;
 int dishY = 0, dish1X = 0, dish2X = 0, dish3X = 0, dish4X = 0, dish5X = 0, dish6X = 0;
 boolean failed = false;
 boolean win = false;
@@ -209,7 +209,7 @@ void getDishes() {
     mouseClick(dish6X, dishY);
 }
 
-void getOrder() {
+void getOrder(int minOrders = 1) {
     do {
         qDebug() << "getting Orders";
         cv::Mat screen = screenshotGame();
@@ -218,12 +218,17 @@ void getOrder() {
         QVector<Match> onigiriRequestMatch = doMatching(screen, cv::imread(path + "onigiriRequest.png"), 6);
         QVector<Match> sRollRequestMatch = doMatching(screen, cv::imread(path + "sRollRequest.png"), 6);
         QVector<Match> shrimpRequestMatch = doMatching(screen, cv::imread(path + "shrimpRequest.png"), 6);
+        QVector<Match> unagiRequestMatch = doMatching(screen, cv::imread(path + "unagiRequest.png"), 6);
+        QVector<Match> dragonRequestMatch = doMatching(screen, cv::imread(path + "dragonRequest.png"), 6);
+        QVector<Match> comboRequestMatch = doMatching(screen, cv::imread(path + "comboRequest.png"), 6);
         cRollRequest = cRollRequestMatch.size(), makeRequest = makeRequestMatch.size(), shrimpRequest = shrimpRequestMatch.size(),
-        onigiriRequest = onigiriRequestMatch.size(), sRollRequest = sRollRequestMatch.size();
-        orderCount = cRollRequestMatch.size() + makeRequestMatch.size() + onigiriRequestMatch.size() + sRollRequestMatch.size();
+        onigiriRequest = onigiriRequestMatch.size(), sRollRequest = sRollRequestMatch.size(), unagiRequest = unagiRequestMatch.size(),
+        dragonRequest = dragonRequestMatch.size(), comboRequest = comboRequestMatch.size();
+        orderCount = cRollRequestMatch.size() + makeRequestMatch.size() + onigiriRequestMatch.size() + sRollRequestMatch.size() +
+        shrimpRequestMatch.size() + unagiRequestMatch.size() + dragonRequestMatch.size() + comboRequestMatch.size();
         getDishes();
         winCheck();
-    } while (orderCount < 1 && win == false && failed == false);
+    } while (orderCount < minOrders && win == false && failed == false);
 }
 
 void orderSupplies() {
@@ -232,7 +237,7 @@ void orderSupplies() {
         waitPosImageClick("order.png", 1);
         waitPosImageClick("riceMenu.png", 1);
         mouseClick(screenX, screenY);
-        QThread::msleep(400);
+        QThread::msleep(50);
         waitPosImageClick("riceOrder.png", 1);
         waitPosImageClick("standardDelivery.png", 1);
         riceCount = riceCount + 10;
@@ -241,7 +246,7 @@ void orderSupplies() {
         waitPosImageClick("order.png", 1);
         waitPosImageClick("toppingMenu.png", 1, 0.98);
         mouseClick(screenX, screenY);
-        QThread::msleep(200);
+        QThread::msleep(50);
         waitPosImageClick("roeOrder.png", 1);
         waitPosImageClick("standardDelivery.png", 1);
         roeCount = roeCount + 10;
@@ -250,7 +255,7 @@ void orderSupplies() {
         waitPosImageClick("order.png", 1);
         waitPosImageClick("toppingMenu.png", 1);
         mouseClick(screenX, screenY);
-        QThread::msleep(200);
+        QThread::msleep(50);
         waitPosImageClick("noriOrder.png", 1);
         waitPosImageClick("standardDelivery.png", 1);
         noriCount = noriCount + 10;
@@ -259,7 +264,7 @@ void orderSupplies() {
         waitPosImageClick("order.png", 1);
         waitPosImageClick("toppingMenu.png", 1);
         mouseClick(screenX, screenY);
-        QThread::msleep(200);
+        QThread::msleep(50);
         waitPosImageClick("salmonOrder.png", 1, 0.98);
         waitPosImageClick("standardDelivery.png", 1);
         salmonCount = salmonCount + 5;
@@ -268,70 +273,73 @@ void orderSupplies() {
         waitPosImageClick("order.png", 1);
         waitPosImageClick("toppingMenu.png", 1);
         mouseClick(screenX, screenY);
-        QThread::msleep(200);
+        QThread::msleep(50);
         waitPosImageClick("shrimpOrder.png", 1, 0.98);
         waitPosImageClick("standardDelivery.png", 1);
         shrimpCount = shrimpCount + 5;
+    }
+    if (unagiCount < 2) {
+        waitPosImageClick("order.png", 1);
+        waitPosImageClick("toppingMenu.png", 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("unagiOrder.png", 1, 0.98);
+        waitPosImageClick("standardDelivery.png", 1);
+        unagiCount = unagiCount + 5;
     }
 }
 
 void makeSushi() {
     qDebug() << "making sushi";
-    if (onigiriRequest > 0) {
-        for (int a = 0; a < onigiriRequest; a = a + 1) {
+    if (comboRequest > 0) {
+        getDishes();
+        for (int a = 0; a < comboRequest; a = a + 1) {
             waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("unagiDesk.png", 1);
             waitPosImageClick("noriDesk.png", 1);
             waitPosImageClick("riceDesk.png", 1);
-            waitPosImageClick("bambusRoll.png", 1);
-            waitPosImage("bambusRollEmpty.png", 1);
-            riceCount = riceCount - 2, noriCount = noriCount -1;
-            orderSupplies();
-            for(int a = 0; a < 5; a = a + 1) {
-            getDishes();
-            QThread::msleep(100);
-            }
-        }
-    }
-    if (cRollRequest > 0) {
-        for (int a = 0; a < cRollRequest; a = a + 1) {
-            waitPosImageClick("riceDesk.png", 1);
-            waitPosImageClick("noriDesk.png", 1);
             waitPosImageClick("roeDesk.png", 1);
-            waitPosImageClick("bambusRoll.png", 1);
-            waitPosImage("bambusRollEmpty.png", 1);
-            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 1;
-            orderSupplies();
-            for(int a = 0; a < 5; a = a + 1) {
-            getDishes();
-            QThread::msleep(100);
-            }
-        }
-    }
-    if (makeRequest > 0) {
-        for (int a = 0; a < makeRequest; a = a + 1) {
-            waitPosImageClick("riceDesk.png", 1);
-            waitPosImageClick("roeDesk.png", 1);
-            waitPosImageClick("noriDesk.png", 1);
-            waitPosImageClick("roeDesk.png", 1);
-            waitPosImageClick("bambusRoll.png", 1);
-            waitPosImage("bambusRollEmpty.png", 1);
-            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 2;
-            orderSupplies();
-            for(int a = 0; a < 5; a = a + 1) {
-            getDishes();
-            QThread::msleep(100);
-            }
-        }
-    }
-    if (sRollRequest > 0) {
-        for (int a = 0; a < sRollRequest; a = a + 1) {
-            waitPosImageClick("riceDesk.png", 1);
             waitPosImageClick("salmonDesk.png", 1);
-            waitPosImageClick("noriDesk.png", 1);
-            waitPosImageClick("salmonDesk.png", 1);
+            waitPosImageClick("shrimpDesk.png", 1);
             waitPosImageClick("bambusRoll.png", 1);
             waitPosImage("bambusRollEmpty.png", 1);
-            riceCount = riceCount - 1, noriCount = noriCount -1, salmonCount = salmonCount - 2;
+            riceCount = riceCount - 2, noriCount = noriCount -1, unagiCount = unagiCount - 1, salmonCount = salmonCount - 1, shrimpCount = shrimpCount - 1, roeCount = roeCount - 1;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
+    if (dragonRequest > 0) {
+        getDishes();
+        for (int a = 0; a < dragonRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("unagiDesk.png", 1);
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("roeDesk.png", 1);
+            waitPosImageClick("unagiDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 2, noriCount = noriCount -1, unagiCount = unagiCount - 2, roeCount = roeCount - 1;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
+    if (unagiRequest > 0) {
+        getDishes();
+        for (int a = 0; a < unagiRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("unagiDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("unagiDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, unagiCount = unagiCount - 2;
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -340,6 +348,7 @@ void makeSushi() {
         }
     }
     if (shrimpRequest > 0) {
+        getDishes();
         for (int a = 0; a < shrimpRequest; a = a + 1) {
             waitPosImageClick("riceDesk.png", 1);
             waitPosImageClick("shrimpDesk.png", 1);
@@ -355,11 +364,80 @@ void makeSushi() {
             }
         }
     }
+    if (sRollRequest > 0) {
+        getDishes();
+        for (int a = 0; a < sRollRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("salmonDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("salmonDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, salmonCount = salmonCount - 2;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
+    if (cRollRequest > 0) {
+        getDishes();
+        for (int a = 0; a < cRollRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("roeDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 1;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
+    if (makeRequest > 0) {
+        getDishes();
+        for (int a = 0; a < makeRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("roeDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("roeDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 2;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
+    if (onigiriRequest > 0) {
+        getDishes();
+        for (int a = 0; a < onigiriRequest; a = a + 1) {
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("noriDesk.png", 1);
+            waitPosImageClick("riceDesk.png", 1);
+            waitPosImageClick("bambusRoll.png", 1);
+            waitPosImage("bambusRollEmpty.png", 1);
+            riceCount = riceCount - 2, noriCount = noriCount -1;
+            orderSupplies();
+            for(int a = 0; a < 5; a = a + 1) {
+            getDishes();
+            QThread::msleep(100);
+            }
+        }
+    }
         onigiriRequest = 0;
         makeRequest = 0;
         cRollRequest = 0;
         sRollRequest = 0;
         shrimpRequest = 0;
+        unagiRequest = 0;
+        dragonRequest = 0;
+        comboRequest = 0;
 }
 
 int main(int argc, char *argv[])
@@ -370,45 +448,34 @@ int main(int argc, char *argv[])
     start();
     QThread::msleep(200);
     getDishesPos();
+    getOrder(3);
     do {
         getOrder();
         makeSushi();
         winCheck();
-        for (int a = 0; a < 10; a = a + 1) {
+        for (int a = 0; a < 20; a = a + 1) {
         getDishes();
-        QThread::msleep(700);
+        QThread::msleep(350);
         }
     } while (failed == false and win == false);
-    if (win == true) {
-        riceCount = 10, noriCount = 10, roeCount = 10, salmonCount = 5;
-        win = false;
-        waitPosImageClick("continue3.png", 1);
-        QThread::msleep(200);
-        waitPosImageClick("continue3.png", 1);
-        do {
-            getOrder();
-            makeSushi();
-            for (int a = 0; a < 10; a = a + 1) {
-            getDishes();
-            QThread::msleep(700);
-            }
-        } while (failed == false and win == false);
-    }
-    if (win == true) {
-        riceCount = 10, noriCount = 10, roeCount = 10, salmonCount = 5;
-        win = false;
-        waitPosImageClick("continue3.png", 1);
-        QThread::msleep(200);
-        waitPosImageClick("continue3.png", 1);
-        do {
-            getOrder();
-            makeSushi();
-            for (int a = 0; a < 10; a = a + 1) {
-            getDishes();
-            QThread::msleep(700);
-            }
-        } while (failed == false and win == false);
-    }
+    do {
+        if (win == true) {
+            riceCount = 10, noriCount = 10, roeCount = 10, salmonCount = 5, unagiCount = 5, shrimpCount = 5;
+            win = false;
+            waitPosImageClick("continue3.png", 1);
+            QThread::msleep(200);
+            waitPosImageClick("continue3.png", 1);
+            getOrder(3);
+            do {
+                getOrder();
+                makeSushi();
+                for (int a = 0; a < 20; a = a + 1) {
+                getDishes();
+                QThread::msleep(350);
+                }
+            } while (failed == false and win == false);
+        }
+    } while (win == true);
     cv::waitKey(0);
     return 0;
 }
