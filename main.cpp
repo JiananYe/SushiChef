@@ -10,17 +10,18 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
-//std::string image_window = "Source Image"; //test
-//std::string result_window = "Result window"; //test
+std::string image_window = "Source Image"; //test
+std::string result_window = "Result window"; //test
 int screenX = 0, screenY = 0, screenW = 640, screenH = 480;
 int mouseX = 0, mouseY = 0;
 int cRollRequest = 0, makeRequest = 0, onigiriRequest = 0, sRollRequest = 0, shrimpRequest = 0, unagiRequest = 0, dragonRequest = 0, comboRequest = 0;
 int orderCount = 0;
 int riceCount = 10, roeCount = 10, noriCount = 10, salmonCount = 5, shrimpCount = 5, unagiCount = 5;
 int dishY = 0, dish1X = 0, dish2X = 0, dish3X = 0, dish4X = 0, dish5X = 0, dish6X = 0;
-boolean failed = false;
-boolean win = false;
-std::string path = "X://GitHub/Project/SushiChef/images/";
+bool failed = false;
+bool win = false;
+//std::string path = "X://GitHub/Project/SushiChef/images/";
+std::string path = "/media/jianan/0AD4D5A9D4D59773/Projects/SushiChef-master/images/";
 
 class Match : public QRect{
     public:
@@ -29,13 +30,13 @@ class Match : public QRect{
 
 QVector<Match> doMatching(cv::Mat img, cv::Mat templ, int max_matches, float matching_percent = 0.95) {
 
-//    cv::namedWindow( image_window, CV_WINDOW_AUTOSIZE ); //test
-//    cv::namedWindow( result_window, CV_WINDOW_AUTOSIZE ); //test
+    cv::namedWindow( image_window, CV_WINDOW_AUTOSIZE ); //test
+    cv::namedWindow( result_window, CV_WINDOW_AUTOSIZE ); //test
 
     cv::Mat result;
-//    cv::Mat img_display; //test
+    cv::Mat img_display; //test
     QVector<Match> matches;
-//    img.copyTo( img_display ); //test
+    img.copyTo( img_display ); //test
 
     int result_cols =  img.cols - templ.cols + 1;
     int result_rows = img.rows - templ.rows + 1;
@@ -58,9 +59,9 @@ QVector<Match> doMatching(cv::Mat img, cv::Mat templ, int max_matches, float mat
 
             qDebug() << "Matching number:" << matches.size() << new_match.left() << new_match.top() << new_match.matching_score;
             floodFill(result, cv::Point(match_loc.x,match_loc.y), cv::Scalar(0,0,0), 0, cv::Scalar(10,10,10));
-//            rectangle( img_display, match_loc, cv::Point( match_loc.x + templ.cols , match_loc.y + templ.rows ), cv::Scalar::all(0), 2, 8, 0 ); //test
-//            imshow( image_window, img_display ); //test
-//            imshow( result_window, result ); //test
+            rectangle( img_display, match_loc, cv::Point( match_loc.x + templ.cols , match_loc.y + templ.rows ), cv::Scalar::all(0), 2, 8, 0 ); //test
+            imshow( image_window, img_display ); //test
+            imshow( result_window, result ); //test
             cv::waitKey(0); //Check Match by Match by pressing a button
         }
         else
@@ -77,6 +78,50 @@ QVector<Match> doMatching(cv::Mat img, cv::Mat templ, int max_matches, float mat
     return matches;
 }
 
+#ifdef __linux
+    #include <X11/Xlib.h>
+    #include <X11/keysym.h>
+
+    Display *display = XOpenDisplay (NULL);
+    void mouseClick(int x, int y){
+        QCursor mouse;
+        mouse.setPos(x + screenX,y + screenY);
+
+        XEvent event;
+        memset (&event, 0, sizeof (event));
+        event.xbutton.button = Button1;
+        event.xbutton.same_screen = True;
+        event.xbutton.subwindow = DefaultRootWindow (display);
+        while (event.xbutton.subwindow)
+        {
+          event.xbutton.window = event.xbutton.subwindow;
+          XQueryPointer (display, event.xbutton.window,
+                         &event.xbutton.root, &event.xbutton.subwindow,
+                         &event.xbutton.x_root, &event.xbutton.y_root,
+                         &event.xbutton.x, &event.xbutton.y,
+                         &event.xbutton.state);
+        }
+        // Press
+        event.type = ButtonPress;
+        if (XSendEvent (display, PointerWindow, True, ButtonPressMask, &event) == 0)
+        fprintf (stderr, "Error to send the event!\n");
+        XFlush (display);
+        QThread::msleep(1);
+        // Release
+        event.type = ButtonRelease;
+        if (XSendEvent (display, PointerWindow, True, ButtonReleaseMask, &event) == 0)
+        fprintf (stderr, "Error to send the event!\n");
+        XFlush (display);
+        QThread::msleep(1);
+    }
+#else
+    #include <windows.h>
+    void mouseClick(int x, int y){
+        QCursor mouse;
+        mouse.setPos(x + screenX,y + screenY);
+        mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 1, 1, 0, 0);
+    }
+#endif
 
 cv::Mat screenshotRect(int x, int y, int w, int h) {
     QRect shot_rect(x, y, w, h);
