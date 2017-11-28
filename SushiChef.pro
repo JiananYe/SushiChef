@@ -51,3 +51,48 @@ unix:LIBS += -L/usr/local/lib -lmath
 #        -lopencv_imgproc331     \
 #        -lopencv_features2d331  \
 #        -lopencv_calib3d331
+
+#ifdef __linux
+    #include <X11/Xlib.h>
+    #include <X11/keysym.h>
+
+    void mouseClick(int x, int y){
+        QCursor mouse;
+        mouse.setPos(x + screenX,y + screenY);
+
+        XEvent event;
+        memset (&event, 0, sizeof (event));
+        event.xbutton.button = button;
+        event.xbutton.same_screen = True;
+        event.xbutton.subwindow = DefaultRootWindow (display);
+        while (event.xbutton.subwindow)
+        {
+          event.xbutton.window = event.xbutton.subwindow;
+          XQueryPointer (display, event.xbutton.window,
+                         &event.xbutton.root, &event.xbutton.subwindow,
+                         &event.xbutton.x_root, &event.xbutton.y_root,
+                         &event.xbutton.x, &event.xbutton.y,
+                         &event.xbutton.state);
+        }
+        // Press
+        event.type = ButtonPress;
+        if (XSendEvent (display, PointerWindow, True, ButtonPressMask, &event) == 0)
+        fprintf (stderr, "Error to send the event!\n");
+        XFlush (display);
+        usleep (1);
+        // Release
+        event.type = ButtonRelease;
+        if (XSendEvent (display, PointerWindow, True, ButtonReleaseMask, &event) == 0)
+        fprintf (stderr, "Error to send the event!\n");
+        XFlush (display);
+        usleep (1);
+    }
+#else
+    #include <windows.h>
+
+    void mouseClick(int x, int y){
+        QCursor mouse;
+        mouse.setPos(x + screenX,y + screenY);
+        mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 1, 1, 0, 0);
+    }
+#endif

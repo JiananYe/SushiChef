@@ -7,7 +7,6 @@
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QThread>
-#include <windows.h>
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
@@ -125,12 +124,6 @@ cv::Mat screenshotGame() {
                     const_cast<uchar*>(desk.bits()),
                     static_cast<size_t>(desk.bytesPerLine())
                     ).clone();
-}
-
-void mouseClick(int x, int y){
-    QCursor mouse;
-    mouse.setPos(x + screenX,y + screenY);
-    mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 1, 1, 0, 0);
 }
 
 void getPlayScreen() {
