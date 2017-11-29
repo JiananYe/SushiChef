@@ -38,7 +38,10 @@ win32:LIBS += X:\opencv-build\bin\libopencv_calib3d331.dll
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 97edcd1... nameconvention
 =======
 >>>>>>> parent of 97edcd1... nameconvention
 # more correct variant, how set includepath and libs for mingw
@@ -46,12 +49,15 @@ win32:LIBS += X:\opencv-build\bin\libopencv_calib3d331.dll
 # read http://doc.qt.io/qt-5/qmake-variable-reference.html#libs
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
 unix:INCLUDEPATH += /usr/local/include/opencv
 unix:INCLUDEPATH += /usr/local/include
 unix:LIBS += -L/usr/local/lib -lopencv_dnn -lopencv_ml -lopencv_objdetect -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_imgproc -lopencv_flann -lopencv_core
 unix:LIBS += -lXtst -lX11
 =======
+=======
+>>>>>>> parent of 97edcd1... nameconvention
 unix:LIBS += -L/usr/local/lib -lmath
 
 #INCLUDEPATH += $$(OPENCV_SDK_DIR)/include
@@ -108,4 +114,7 @@ unix:LIBS += -L/usr/local/lib -lmath
         mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 1, 1, 0, 0);
     }
 #endif
+<<<<<<< HEAD
+>>>>>>> parent of 97edcd1... nameconvention
+=======
 >>>>>>> parent of 97edcd1... nameconvention
