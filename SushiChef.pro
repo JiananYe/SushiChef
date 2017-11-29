@@ -27,7 +27,7 @@ SOURCES += main.cpp
 
 HEADERS  +=
 
-win32:INCLUDEPATH += X:\opencv\build\include
+win32:INCLUDEPATH += X:\opencv\build
 
 win32:LIBS += X:\opencv-build\bin\libopencv_core331.dll
 win32:LIBS += X:\opencv-build\bin\libopencv_highgui331.dll
@@ -36,6 +36,13 @@ win32:LIBS += X:\opencv-build\bin\libopencv_imgproc331.dll
 win32:LIBS += X:\opencv-build\bin\libopencv_features2d331.dll
 win32:LIBS += X:\opencv-build\bin\libopencv_calib3d331.dll
 
+<<<<<<< HEAD
+=======
+# more correct variant, how set includepath and libs for mingw
+# add system variable: OPENCV_SDK_DIR=D:/opencv/build
+# read http://doc.qt.io/qt-5/qmake-variable-reference.html#libs
+
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
 unix:INCLUDEPATH += /usr/local/include/opencv
 unix:INCLUDEPATH += /usr/local/include
 unix:LIBS += -L/usr/local/lib -lopencv_dnn -lopencv_ml -lopencv_objdetect -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_imgproc -lopencv_flann -lopencv_core

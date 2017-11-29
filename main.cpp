@@ -15,14 +15,28 @@
     #include <windows.h>
 #endif
 
+#ifdef __linux
+    #include <X11/extensions/XTest.h>
+#else
+    #include <windows.h>
+#endif
 //std::string image_window = "Source Image"; //test
 //std::string result_window = "Result window"; //test
+<<<<<<< HEAD
 int screen_x = 0, screen_y = 0, screen_w = 640, screen_h = 480;
 int mouse_x = 0, mouse_y = 0;
 int cali_roll_request = 0, maki_request = 0, onigiri_request = 0, salmon_roll_request = 0, shrimp_request = 0, unagi_request = 0, dragon_request = 0, combo_request = 0;
 int order_count = 0;
 int rice_count = 10, roe_count = 10, nori_count = 10, salmon_count = 5, shrimp_count = 5, unagi_count = 5;
 int dish_y = 0, dish_1x = 0, dish_2x = 0, dish_3x = 0, dish_4x = 0, dish_5x = 0, dish_6x = 0;
+=======
+int screenX = 0, screenY = 0, screenW = 640, screenH = 480;
+int mouseX = 0, mouseY = 0;
+int cRollRequest = 0, makeRequest = 0, onigiriRequest = 0, sRollRequest = 0, shrimpRequest = 0, unagiRequest = 0, dragonRequest = 0, comboRequest = 0;
+int orderCount = 0;
+int riceCount = 10, roeCount = 10, noriCount = 10, salmonCount = 5, shrimpCount = 5, unagiCount = 5;
+int dishY = 0, dish1X = 0, dish2X = 0, dish3X = 0, dish4X = 0, dish5X = 0, dish6X = 0;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
 bool failed = false;
 bool win = false;
 
@@ -86,12 +100,20 @@ QVector<Match> doMatching(cv::Mat img, cv::Mat templ, int max_matches, float mat
 }
 
 #ifdef __linux
+<<<<<<< HEAD
     std::string file_type = ".PNG";
+=======
+    std::string endung = ".PNG";
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
     std::string path = "/media/jianan/0AD4D5A9D4D59773/Projects/SushiChef-master/images/";
 
     void mouseClick(int x, int y){
         QCursor mouse;
+<<<<<<< HEAD
         mouse.setPos(x + screen_x,y + screen_y);
+=======
+        mouse.setPos(x + screenX,y + screenY);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
 
         Display *dpy = XOpenDisplay (NULL);
         XTestFakeButtonEvent (dpy, 1, True,  0);
@@ -99,11 +121,19 @@ QVector<Match> doMatching(cv::Mat img, cv::Mat templ, int max_matches, float mat
         XCloseDisplay (dpy);
     }
 #else
+<<<<<<< HEAD
     std::string file_type = ".png";
     std::string path = "X://GitHub/Project/SushiChef/images/";
     void mouseClick(int x, int y){
         QCursor mouse;
         mouse.setPos(x + screen_x,y + screen_y);
+=======
+    std::string endung = ".png"
+    std::string path = "X://GitHub/Project/SushiChef/images/";
+    void mouseClick(int x, int y){
+        QCursor mouse;
+        mouse.setPos(x + screenX,y + screenY);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
         mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 1, 1, 0, 0);
     }
 #endif
@@ -157,7 +187,11 @@ cv::Mat screenshotGame() {
 }
 
 void getPlayScreen() {
+<<<<<<< HEAD
     QVector<Match> matches = doMatching(screenshot(), cv::imread(path + "topLeft" + file_type, 1), 1);
+=======
+    QVector<Match> matches = doMatching(screenshot(), cv::imread(path + "topLeft" + endung, 1), 1);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
     if (matches.size() > 0) {
         screen_x = matches[0].left();
         screen_y = matches[0].top();
@@ -189,18 +223,32 @@ void waitPosImageClick(std::string templ_name, int max_matches, float matching_p
 }
 
 void start() {
+<<<<<<< HEAD
     waitPosImageClick("playButton" + file_type, 1);
     waitPosImageClick("continue" + file_type, 1);
     waitPosImageClick("continue2" + file_type, 1);
     waitPosImageClick("skip" + file_type, 1);
     waitPosImageClick("continue" + file_type, 1);
+=======
+    waitPosImageClick("playButton" + endung, 1);
+    waitPosImageClick("continue" + endung, 1);
+    waitPosImageClick("continue2" + endung, 1);
+    waitPosImageClick("skip" + endung, 1);
+    waitPosImageClick("continue" + endung, 1);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
 }
 
 void winCheck() {
    cv::Mat screen = screenshotGame();
+<<<<<<< HEAD
    QVector<Match> failed_match = doMatching(screen, cv::imread(path + "failed" + file_type), 6);
    QVector<Match> win_match = doMatching(screen, cv::imread(path + "win" + file_type), 6);
    if (failed_match.size() == 1) {
+=======
+   QVector<Match> failedMatch = doMatching(screen, cv::imread(path + "failed" + endung), 6);
+   QVector<Match> winMatch = doMatching(screen, cv::imread(path + "win" + endung), 6);
+   if (failedMatch.size() == 1) {
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
        failed = true;
    }
    if (win_match.size() == 1) {
@@ -209,7 +257,11 @@ void winCheck() {
 }
 
 void getDishesPos() {
+<<<<<<< HEAD
         QVector<Match> table = doMatching(screenshotGame(), cv::imread(path + "table" + file_type), 6);
+=======
+        QVector<Match> table = doMatching(screenshotGame(), cv::imread(path + "table" + endung), 6);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
         if (table.size() == 6) {
             dish_y = table[0].top();
             dish_1x = table[0].left() + 40;
@@ -236,6 +288,7 @@ void getOrder(int min_orders = 1) {
     do {
         qDebug() << "getting Orders";
         cv::Mat screen = screenshotGame();
+<<<<<<< HEAD
         QVector<Match> cali_roll_requestMatch = doMatching(screen, cv::imread(path + "cali_roll_request" + file_type), 6);
         QVector<Match> maki_requestMatch = doMatching(screen, cv::imread(path + "maki_request" + file_type), 6);
         QVector<Match> onigiri_requestMatch = doMatching(screen, cv::imread(path + "onigiri_request" + file_type), 6);
@@ -249,6 +302,21 @@ void getOrder(int min_orders = 1) {
         dragon_request = dragon_requestMatch.size(), combo_request = combo_requestMatch.size();
         order_count = cali_roll_requestMatch.size() + maki_requestMatch.size() + onigiri_requestMatch.size() + salmon_roll_requestMatch.size() +
         shrimp_requestMatch.size() + unagi_requestMatch.size() + dragon_requestMatch.size() + combo_requestMatch.size();
+=======
+        QVector<Match> cRollRequestMatch = doMatching(screen, cv::imread(path + "cRollRequest" + endung), 6);
+        QVector<Match> makeRequestMatch = doMatching(screen, cv::imread(path + "makeRequest" + endung), 6);
+        QVector<Match> onigiriRequestMatch = doMatching(screen, cv::imread(path + "onigiriRequest" + endung), 6);
+        QVector<Match> sRollRequestMatch = doMatching(screen, cv::imread(path + "sRollRequest" + endung), 6);
+        QVector<Match> shrimpRequestMatch = doMatching(screen, cv::imread(path + "shrimpRequest" + endung), 6);
+        QVector<Match> unagiRequestMatch = doMatching(screen, cv::imread(path + "unagiRequest" + endung), 6);
+        QVector<Match> dragonRequestMatch = doMatching(screen, cv::imread(path + "dragonRequest" + endung), 6);
+        QVector<Match> comboRequestMatch = doMatching(screen, cv::imread(path + "comboRequest" + endung), 6);
+        cRollRequest = cRollRequestMatch.size(), makeRequest = makeRequestMatch.size(), shrimpRequest = shrimpRequestMatch.size(),
+        onigiriRequest = onigiriRequestMatch.size(), sRollRequest = sRollRequestMatch.size(), unagiRequest = unagiRequestMatch.size(),
+        dragonRequest = dragonRequestMatch.size(), comboRequest = comboRequestMatch.size();
+        orderCount = cRollRequestMatch.size() + makeRequestMatch.size() + onigiriRequestMatch.size() + sRollRequestMatch.size() +
+        shrimpRequestMatch.size() + unagiRequestMatch.size() + dragonRequestMatch.size() + comboRequestMatch.size();
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
         getDishes();
         winCheck();
     } while (order_count < min_orders && win == false && failed == false);
@@ -256,6 +324,7 @@ void getOrder(int min_orders = 1) {
 
 void orderSupplies() {
     qDebug() << "order supplies";
+<<<<<<< HEAD
     if (rice_count < 2) {
         waitPosImageClick("order" + file_type, 1);
         waitPosImageClick("riceMenu" + file_type, 1);
@@ -309,6 +378,61 @@ void orderSupplies() {
         waitPosImageClick("unagiOrder" + file_type, 1, 0.98);
         waitPosImageClick("standardDelivery" + file_type, 1);
         unagi_count = unagi_count + 5;
+=======
+    if (riceCount < 2) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("riceMenu" + endung, 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("riceOrder" + endung, 1);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        riceCount = riceCount + 10;
+    }
+    if (roeCount < 2) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("toppingMenu" + endung, 1, 0.98);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("roeOrder" + endung, 1);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        roeCount = roeCount + 10;
+    }
+    if (noriCount < 1) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("toppingMenu" + endung, 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("noriOrder" + endung, 1);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        noriCount = noriCount + 10;
+    }
+    if (salmonCount < 2) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("toppingMenu" + endung, 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("salmonOrder" + endung, 1, 0.98);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        salmonCount = salmonCount + 5;
+    }
+    if (shrimpCount < 2) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("toppingMenu" + endung, 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("shrimpOrder" + endung, 1, 0.98);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        shrimpCount = shrimpCount + 5;
+    }
+    if (unagiCount < 2) {
+        waitPosImageClick("order" + endung, 1);
+        waitPosImageClick("toppingMenu" + endung, 1);
+        mouseClick(screenX, screenY);
+        QThread::msleep(50);
+        waitPosImageClick("unagiOrder" + endung, 1, 0.98);
+        waitPosImageClick("standardDelivery" + endung, 1);
+        unagiCount = unagiCount + 5;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
     }
 }
 
@@ -316,6 +440,7 @@ void makeSushi() {
     qDebug() << "making sushi";
     if (combo_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < combo_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("unagiDesk" + file_type, 1);
@@ -327,6 +452,19 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 2, nori_count = nori_count -1, unagi_count = unagi_count - 1, salmon_count = salmon_count - 1, shrimp_count = shrimp_count - 1, roe_count = roe_count - 1;
+=======
+        for (int a = 0; a < comboRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("unagiDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("roeDesk" + endung, 1);
+            waitPosImageClick("salmonDesk" + endung, 1);
+            waitPosImageClick("shrimpDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 2, noriCount = noriCount -1, unagiCount = unagiCount - 1, salmonCount = salmonCount - 1, shrimpCount = shrimpCount - 1, roeCount = roeCount - 1;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -336,6 +474,7 @@ void makeSushi() {
     }
     if (dragon_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < dragon_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("unagiDesk" + file_type, 1);
@@ -346,6 +485,18 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 2, nori_count = nori_count -1, unagi_count = unagi_count - 2, roe_count = roe_count - 1;
+=======
+        for (int a = 0; a < dragonRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("unagiDesk" + endung, 1);
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("roeDesk" + endung, 1);
+            waitPosImageClick("unagiDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 2, noriCount = noriCount -1, unagiCount = unagiCount - 2, roeCount = roeCount - 1;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -355,6 +506,7 @@ void makeSushi() {
     }
     if (unagi_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < unagi_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("unagiDesk" + file_type, 1);
@@ -363,6 +515,16 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 1, nori_count = nori_count -1, unagi_count = unagi_count - 2;
+=======
+        for (int a = 0; a < unagiRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("unagiDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("unagiDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, unagiCount = unagiCount - 2;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -372,6 +534,7 @@ void makeSushi() {
     }
     if (shrimp_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < shrimp_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("shrimpDesk" + file_type, 1);
@@ -380,6 +543,16 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 1, nori_count = nori_count -1, shrimp_count = shrimp_count - 2;
+=======
+        for (int a = 0; a < shrimpRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("shrimpDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("shrimpDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, shrimpCount = shrimpCount - 2;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -389,6 +562,7 @@ void makeSushi() {
     }
     if (salmon_roll_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < salmon_roll_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("salmonDesk" + file_type, 1);
@@ -397,6 +571,16 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 1, nori_count = nori_count -1, salmon_count = salmon_count - 2;
+=======
+        for (int a = 0; a < sRollRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("salmonDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("salmonDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, salmonCount = salmonCount - 2;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -406,6 +590,7 @@ void makeSushi() {
     }
     if (cali_roll_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < cali_roll_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("noriDesk" + file_type, 1);
@@ -413,6 +598,15 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 1, nori_count = nori_count -1, roe_count = roe_count - 1;
+=======
+        for (int a = 0; a < cRollRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("roeDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 1;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -422,6 +616,7 @@ void makeSushi() {
     }
     if (maki_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < maki_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("roeDesk" + file_type, 1);
@@ -430,6 +625,16 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 1, nori_count = nori_count -1, roe_count = roe_count - 2;
+=======
+        for (int a = 0; a < makeRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("roeDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("roeDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 1, noriCount = noriCount -1, roeCount = roeCount - 2;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -439,6 +644,7 @@ void makeSushi() {
     }
     if (onigiri_request > 0) {
         getDishes();
+<<<<<<< HEAD
         for (int a = 0; a < onigiri_request; a = a + 1) {
             waitPosImageClick("riceDesk" + file_type, 1);
             waitPosImageClick("noriDesk" + file_type, 1);
@@ -446,6 +652,15 @@ void makeSushi() {
             waitPosImageClick("bambusRoll" + file_type, 1);
             waitPosImage("bambusRollEmpty" + file_type, 1);
             rice_count = rice_count - 2, nori_count = nori_count -1;
+=======
+        for (int a = 0; a < onigiriRequest; a = a + 1) {
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("noriDesk" + endung, 1);
+            waitPosImageClick("riceDesk" + endung, 1);
+            waitPosImageClick("bambusRoll" + endung, 1);
+            waitPosImage("bambusRollEmpty" + endung, 1);
+            riceCount = riceCount - 2, noriCount = noriCount -1;
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             orderSupplies();
             for(int a = 0; a < 5; a = a + 1) {
             getDishes();
@@ -467,7 +682,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     getPlayScreen();
+<<<<<<< HEAD
     doMatching(screenshotGame(), cv::imread(path + "topLeft" + file_type, 1), 1);
+=======
+    doMatching(screenshotGame(), cv::imread(path + "topLeft" + endung, 1), 1);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
     start();
     QThread::msleep(200);
     getDishesPos();
@@ -485,9 +704,15 @@ int main(int argc, char *argv[])
         if (win == true) {
             rice_count = 10, nori_count = 10, roe_count = 10, salmon_count = 5, unagi_count = 5, shrimp_count = 5;
             win = false;
+<<<<<<< HEAD
             waitPosImageClick("continue3" + file_type, 1);
             QThread::msleep(200);
             waitPosImageClick("continue3" + file_type, 1);
+=======
+            waitPosImageClick("continue3" + endung, 1);
+            QThread::msleep(200);
+            waitPosImageClick("continue3" + endung, 1);
+>>>>>>> b5d9aa4253e32aa01ec4d7900b861fe306ff70ad
             getOrder(3);
             do {
                 getOrder();
